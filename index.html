@@ -1,0 +1,2251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>印尼语学习 - 园区/政府/日常/办公/工厂五大类</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f0f2f5;
+            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 40px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        /* 类别选项卡 (五大类) */
+        .category-tabs {
+            display: flex;
+            overflow-x: auto;
+            background: #ffffff;
+            border-bottom: 1px solid #e9edf2;
+            padding: 0 8px;
+            scrollbar-width: thin;
+        }
+        .cat-btn {
+            flex: 0 0 auto;
+            padding: 14px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: none;
+            border: none;
+            color: #5b6e8c;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .cat-btn.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+            background: #f8fafc;
+        }
+
+        /* 学习/复习 主标签 */
+        .mode-tabs {
+            display: flex;
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 20px;
+        }
+        .mode-btn {
+            flex: 1;
+            text-align: center;
+            padding: 16px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #64748b;
+            transition: 0.2s;
+        }
+        .mode-btn.active {
+            color: #3b82f6;
+            border-bottom: 3px solid #3b82f6;
+            background: #f8fafc;
+        }
+
+        .panel {
+            display: none;
+            padding: 20px 16px 28px;
+            animation: fade 0.25s ease;
+        }
+        .panel.active-panel {
+            display: block;
+        }
+        @keyframes fade {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* 卡片样式 */
+        .word-card {
+            background: #fff;
+            border-radius: 32px;
+            padding: 28px 16px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            border: 1px solid #edf2f7;
+            margin-bottom: 24px;
+        }
+        .indo-word {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0f172a;
+            word-break: break-word;
+            margin-bottom: 20px;
+            letter-spacing: -0.3px;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0 8px;
+        }
+        .option-btn {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 12px 6px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1e293b;
+            transition: all 0.1s;
+            cursor: pointer;
+        }
+        .option-btn:active { transform: scale(0.97); background: #eef2ff; }
+
+        .timer-bar {
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+        .timer-progress {
+            width: 100%;
+            height: 100%;
+            background: #3b82f6;
+            transition: width linear 0.05s;
+        }
+        .chinese-answer {
+            background: #eff6ff;
+            padding: 18px;
+            border-radius: 28px;
+            margin: 12px 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0c4a6e;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .btn-remember, .btn-forget {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-remember {
+            background: #3b82f6;
+            color: white;
+        }
+        .btn-forget {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+        }
+        .info-bar {
+            background: #f1f5f9;
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            color: #334155;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        .hint-text {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 12px;
+        }
+        .next-tip {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #94a3b8;
+            margin-top: 20px;
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        footer {
+            font-size: 0.65rem;
+            text-align: center;
+            padding: 12px;
+            color: #94a3b8;
+            border-top: 1px solid #eef2ff;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <!-- 五大类标签 -->
+    <div class="category-tabs" id="categoryTabs">
+        <button class="cat-btn active" data-cat="daily">日常用语</button>
+        <button class="cat-btn" data-cat="office">办公用语</button>
+        <button class="cat-btn" data-cat="estate">园区管理</button>
+        <button class="cat-btn" data-cat="gov">对接政府</button>
+        <button class="cat-btn" data-cat="factory">冶矿工厂</button>
+    </div>
+
+    <!-- 新词 / 复习 模式切换 -->
+    <div class="mode-tabs">
+        <button class="mode-btn active" data-mode="new">📖 新词学习</button>
+        <button class="mode-btn" data-mode="review">🔄 复习巩固</button>
+    </div>
+
+    <!-- 新词模块 -->
+    <div id="newPanel" class="panel active-panel">
+        <div class="info-bar"><span>📚 本类词汇: <span id="catTotal">0</span></span><span>✨ 待学新词: <span id="newRemaining">0</span></span></div>
+        <div class="word-card">
+            <div class="indo-word" id="newIndoWord">-</div>
+            <div class="options-grid" id="optionsContainer"></div>
+            <div class="hint-text" id="newFeedbackMsg">点击选项选择正确释义</div>
+        </div>
+        <div class="next-tip">✅ 正确即加入明日复习队列，自动下一词</div>
+    </div>
+
+    <!-- 复习模块 -->
+    <div id="reviewPanel" class="panel">
+        <div class="info-bar"><span>📅 今日待复习: <span id="reviewDueCount">0</span></span><span>📦 复习池: <span id="reviewPoolCount">0</span></span></div>
+        <div class="word-card">
+            <div class="indo-word" id="reviewIndoWord">-</div>
+            <div class="timer-bar"><div class="timer-progress" id="timerProgress"></div></div>
+            <div id="reviewChineseDisplay" class="chinese-answer" style="background:#f1f5f9;">⏳ 5秒后显示中文</div>
+            <div class="action-buttons">
+                <button class="btn-remember" id="rememberBtn">✔️ 记住</button>
+                <button class="btn-forget" id="forgetBtn">🔄 忘记</button>
+            </div>
+            <div class="hint-text" id="reviewHint"></div>
+        </div>
+        <div class="next-tip">⏰ 5秒后自动显示中文，点击记住/忘记进入下一词</div>
+    </div>
+    <footer>🇮🇩 进度自动保存 | 新词学习后隔天加入复习 | 五大类独立词库</footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // 基于提供的Excel数据构建五大类词库（无数字，纯文本）
+    // --------------------------------------------------------------
+    // 定义分类
+    const categories = {
+        daily: { name: "日常用语", words: [] },
+        office: { name: "办公用语", words: [] },
+        estate: { name: "园区管理", words: [] },
+        gov: { name: "对接政府", words: [] },
+        factory: { name: "冶矿工厂", words: [] }
+    };
+
+    // 从用户表格手动整理的高质量词汇 (超过2000词全覆盖)
+    // 日常用语部分 (已包含基础及扩展)
+    const dailyRaw = [
+      ["makan", "吃"],
+    ["minum", "喝"],
+    ["tidur", "睡觉"],
+    ["pergi", "去"],
+    ["pulang", "回家"],
+    ["datang", "来"],
+    ["berjalan", "走路"],
+    ["berlari", "跑步"],
+    ["duduk", "坐"],
+    ["berdiri", "站"],
+    ["melihat", "看"],
+    ["mendengar", "听"],
+    ["berbicara", "说话"],
+    ["membaca", "读"],
+    ["menulis", "写"],
+    ["membeli", "买"],
+    ["menjual", "卖"],
+    ["membayar", "付款"],
+    ["memberi", "给"],
+    ["berubah", "改变"],
+    ["belajar", "学习"],
+    ["mengajar", "教"],
+    ["mencuci", "洗"],
+    ["membersihkan", "打扫"],
+    ["memasak", "做饭"],
+    ["rumah", "房子"],
+    ["mobil", "汽车"],
+    ["uang", "钱"],
+    ["belanja", "购物"],
+    ["mahal", "贵"],
+    ["murah", "便宜"],
+    ["panas", "热"],
+    ["dingin", "冷"],
+    ["hujan", "下雨"],
+    ["senang", "高兴"],
+    ["sedih", "伤心"],
+    ["marah", "生气"],
+    ["besar", "大"],
+    ["kecil", "小"],
+    ["bermain", "玩"],
+    ["bangun", "起床"],
+    ["mandi", "洗澡"],
+    ["berpakaian", "穿衣服"],
+    ["sarapan", "吃早餐"],
+    ["berangkat", "出发"],
+    ["sampai", "到达"],
+    ["istirahat", "休息"],
+    ["sore", "傍晚"],
+    ["malam", "晚上"],
+    ["hari ini", "今天"],
+    ["besok", "明天"],
+    ["kemarin", "昨天"],
+    ["baru", "新的"],
+    ["lama", "旧的"],
+    ["sibuk", "忙"],
+    ["lelah", "累"],
+    ["lapar", "饿"],
+    ["haus", "渴"],
+    ["mengantuk", "困"],
+    ["bermimpi", "做梦"],
+    ["tetangga", "邻居"],
+    ["menolong", "帮助"],
+    ["meminjam", "借"],
+    ["meminjamkan", "借出"],
+    ["mengembalikan", "归还"],
+    ["jatuh", "掉落"],
+    ["sakit", "生病/疼痛"],
+    ["sehat", "健康"],
+    ["minum obat", "吃药"],
+    ["periksa", "检查"],
+    ["menunggu", "等待"],
+    ["mengantar", "送/陪伴"],
+    ["menjemput", "接"],
+    ["naik", "上车/搭乘"],
+    ["turun", "下来"],
+    ["dekat", "近"],
+    ["jauh", "远"],
+    ["kanan", "右边"],
+    ["kiri", "左边"],
+    ["lurus", "直走"],
+    ["berenang", "游泳"],
+    ["bersepeda", "骑自行车"],
+    ["memasukkan", "放入"],
+    ["mengeluarkan", "取出"],
+    ["mendorong", "推"],
+    ["menarik", "拉"],
+    ["menggambar", "画画"],
+    ["menyanyi", "唱歌"],
+    ["menari", "跳舞"],
+    ["tertawa", "笑"],
+    ["menangis", "哭"],
+    ["berteriak", "喊叫"],
+    ["berbisik", "耳语"],
+    ["mengangguk", "点头"],
+    ["menggeleng", "摇头"],
+    ["memegang", "握住"],
+    ["melepas", "松开"],
+    ["menutup", "关闭"],
+    ["membuka", "打开"],
+    ["mengunci", "锁上"],
+    ["bersin", "打喷嚏"],
+    ["batuk", "咳嗽"],
+    ["demam", "发烧"],
+    ["pilek", "感冒"],
+    ["pusing", "头晕"],
+    ["muntah", "呕吐"],
+    ["perut", "肚子"],
+    ["gigi", "牙齿"],
+    ["tangan", "手"],
+    ["kaki", "脚"],
+    ["mata", "眼睛"],
+    ["telinga", "耳朵"],
+    ["hidung", "鼻子"],
+    ["rambut", "头发"],
+    ["kuku", "指甲"],
+    ["berkeringat", "出汗"],
+    ["bernapas", "呼吸"],
+    ["berkedip", "眨眼"],
+    ["menelan", "吞咽"],
+    ["menyapu", "扫地"],
+    ["mengepel", "拖地"],
+    ["menyetrika", "熨烫"],
+    ["melipat", "折叠"],
+    ["menggantung", "悬挂"],
+    ["membuang sampah", "扔垃圾"],
+    ["memisahkan", "分开"],
+    ["berkebun", "做园艺"],
+    ["menyiram", "浇水"],
+    ["memetik", "采摘"],
+    ["memanggang", "烤"],
+    ["merebus", "煮"],
+    ["menggoreng", "炸"],
+    ["menumis", "炒"],
+    ["mencicipi", "品尝"],
+    ["mengupas", "削皮"],
+    ["memotong", "切"],
+    ["mencampur", "混合"],
+    ["mengaduk", "搅拌"],
+    ["menghidangkan", "上菜"],
+    ["bertemu", "见面"],
+    ["berpisah", "告别"],
+    ["berkunjung", "拜访"],
+    ["menerima", "接受"],
+    ["menolak", "拒绝"],
+    ["setuju", "同意"],
+    ["berbeda", "不同"],
+    ["sama", "一样"],
+    ["pindah", "搬家"],
+    ["tinggal", "居住"],
+    ["lahir", "出生"],
+    ["meninggal", "去世"],
+    ["menikah", "结婚"],
+    ["hamil", "怀孕"],
+    ["menggendong", "抱"],
+    ["mencium", "亲吻"],
+    ["memeluk", "拥抱"],
+    ["tersenyum", "微笑"],
+    ["melambaikan tangan", "挥手"],
+    ["berjabat tangan", "握手"],
+    ["bersalaman", "行礼"],
+    ["sungkem", "跪拜礼"],
+    ["memaafkan", "原谅"],
+    ["mengucapkan", "表达"],
+    ["selamat", "祝贺"],
+    ["apel", "苹果"],
+    ["jeruk", "橙子"],
+    ["pisang", "香蕉"],
+    ["semangka", "西瓜"],
+    ["melon", "甜瓜"],
+    ["pepaya", "木瓜"],
+    ["nanas", "菠萝"],
+    ["mangga", "芒果"],
+    ["manggis", "山竹"],
+    ["durian", "榴莲"],
+    ["rambutan", "红毛丹"],
+    ["duku", "杜古果"],
+    ["salak", "蛇皮果"],
+    ["jambu biji", "番石榴"],
+    ["jambu air", "莲雾"],
+    ["belimbing", "杨桃"],
+    ["sawo", "人心果"],
+    ["alpukat", "牛油果"],
+    ["kelapa", "椰子"],
+    ["sirsak", "刺果番荔枝"],
+    ["markisa", "百香果"],
+    ["stroberi", "草莓"],
+    ["anggur", "葡萄"],
+    ["pir", "梨"],
+    ["ceri", "樱桃"],
+    ["kiwi", "猕猴桃"],
+    ["lemon", "柠檬"],
+    ["bayam", "菠菜"],
+    ["kangkung", "空心菜"],
+    ["sawi", "青菜"],
+    ["kol", "卷心菜"],
+    ["brokoli", "西兰花"],
+    ["wortel", "胡萝卜"],
+    ["tomat", "番茄"],
+    ["cabai", "辣椒"],
+    ["bawang merah", "红葱"],
+    ["bawang putih", "大蒜"],
+    ["kentang", "土豆"],
+    ["singkong", "木薯"],
+    ["ubi jalar", "红薯"],
+    ["kacang panjang", "长豆角"],
+    ["mentimun", "黄瓜"],
+    ["terong", "茄子"],
+    ["labu siam", "佛手瓜"],
+    ["pare", "苦瓜"],
+    ["daun singkong", "木薯叶"],
+    ["kemangi", "罗勒"],
+    ["seledri", "芹菜"],
+    ["daun bawang", "葱"],
+    ["daging sapi", "牛肉"],
+    ["daging ayam", "鸡肉"],
+    ["ikan segar", "鲜鱼"],
+    ["udang", "虾"],
+    ["cumi", "鱿鱼"],
+    ["tempe", "天贝"],
+    ["tahu", "豆腐"],
+    ["telur ayam", "鸡蛋"],
+    ["beras", "大米"],
+    ["gula pasir", "砂糖"],
+    ["garam", "盐"],
+    ["minyak goreng", "食用油"],
+    ["tepung terigu", "面粉"],
+    ["membayar", "付款"],
+    ["uang tunai", "现金"],
+    ["uang pas", "正好"],
+    ["uang kecil", "零钱"],
+    ["kembalian", "找零"],
+    ["kurang", "不够"],
+    ["lebih", "超出"],
+    ["bon", "账单"],
+    ["nota pembelian", "购物小票"],
+    ["faktur", "发票"],
+    ["struk ATM", "ATM凭条"],
+    ["QRIS", "二维码支付"],
+    ["dompet digital", "电子钱包"],
+    ["saldo", "余额"],
+    ["isi saldo", "充值"],
+    ["transfer bank", "银行转账"],
+    ["mobile banking", "手机银行"],
+    ["kartu debit", "借记卡"],
+    ["kartu kredit", "信用卡"],
+    ["cicilan", "分期"],
+    ["tenor", "期限"],
+    ["bunga", "利息"],
+    ["cashback", "返现"],
+    ["potongan harga", "折扣"],
+    ["diskon", "折扣"],
+    ["promo", "促销"],
+    ["gratis", "免费"],
+    ["ongkos kirim", "运费"],
+    ["total belanja", "总额"],
+    ["bayar di tempat", "货到付款"],
+    ["kode bayar", "付款码"],
+    ["lunas", "付清"],
+    ["utang", "欠债"],
+    ["bon utang", "赊账"],
+    ["mengutangkan", "赊给"],
+    ["harga pas", "不二价"],
+    ["menawar", "讲价"],
+    ["dapat harga miring", "便宜买到"],
+    ["sampo", "洗发水"],
+    ["kondisioner", "护发素"],
+    ["sabun mandi cair", "沐浴露"],
+    ["sabun mandi batang", "香皂"],
+    ["sabun cuci tangan", "洗手液"],
+    ["sabun muka", "洗面奶"],
+    ["pelembap", "润肤露"],
+    ["tabir surya", "防晒霜"],
+    ["sikat gigi", "牙刷"],
+    ["pasta gigi", "牙膏"],
+    ["benang gigi", "牙线"],
+    ["obat kumur", "漱口水"],
+    ["pisau cukur", "剃须刀"],
+    ["krim cukur", "剃须泡沫"],
+    ["deodoran", "止汗露"],
+    ["parfum", "香水"],
+    ["sisir", "梳子"],
+    ["jepit rambut", "发夹"],
+    ["karet gelang rambut", "头绳"],
+    ["handuk mandi", "浴巾"],
+    ["waslap", "小方巾"],
+    ["pembalut wanita", "卫生巾"],
+    ["pantyliner", "护垫"],
+    ["kapas", "化妆棉"],
+    ["cotton bud", "棉签"],
+    ["tisu wajah", "面巾纸"],
+    ["tisu basah", "湿纸巾"],
+    ["tisu toilet", "卫生纸"],
+    ["popok bayi", "纸尿裤"],
+    ["deterjen bubuk", "洗衣粉"],
+    ["deterjen cair", "洗衣液"],
+    ["pelembut pakaian", "柔顺剂"],
+    ["pemutih pakaian", "漂白水"],
+    ["sabun cuci piring", "洗洁精"],
+    ["spons", "海绵"],
+    ["kresek", "塑料袋"],
+    ["kantong belanja", "购物袋"],
+    ["camilan", "零食"],
+    ["keripik kentang", "薯片"],
+    ["keripik singkong", "木薯片"],
+    ["keripik pisang", "香蕉片"],
+    ["biskuit", "饼干"],
+    ["kue kering", "曲奇"],
+    ["wafer", "威化饼"],
+    ["permen", "糖果"],
+    ["cokelat batang", "巧克力块"],
+    ["cokelat bubuk", "可可粉"],
+    ["es krim", "冰淇淋"],
+    ["kue bolu", "海绵蛋糕"],
+    ["donat", "甜甜圈"],
+    ["roti tawar", "吐司"],
+    ["roti isi", "夹心面包"],
+    ["mi instan", "方便面"],
+    ["mi gelas", "杯面"],
+    ["bubur instan", "即食粥"],
+    ["sereal", "麦片"],
+    ["granola", "格兰诺拉"],
+    ["susu bubuk", "奶粉"],
+    ["susu kental manis", "炼乳"],
+    ["yogurt", "酸奶"],
+    ["keju", "奶酪"],
+    ["mentega", "黄油"],
+    ["selai", "果酱"],
+    ["madu", "蜂蜜"],
+    ["kacang goreng", "炸花生"],
+    ["kacang mete", "腰果"],
+    ["kacang almond", "杏仁"],
+    ["kuaci", "瓜子"],
+    ["kismis", "葡萄干"],
+    ["kurma", "椰枣"],
+    ["kerupuk udang", "虾片"],
+    ["kerupuk kulit", "炸猪皮"],
+    ["emping melinjo", "豆饼"],
+    ["minuman bersoda", "汽水"],
+    ["jus buah", "果汁"],
+    ["susu kotak", "盒装牛奶"],
+    ["teh celup", "茶包"],
+    ["kopi instan", "速溶咖啡"],
+    ["kopi bubuk", "咖啡粉"],
+    ["gula aren", "棕榈糖"],
+    ["sirop", "糖浆"],
+    ["pemanis buatan", "代糖"],
+    ["air mineral botol", "瓶装水"],
+    ["minuman energi", "能量饮料"],
+    ["minuman isotonik", "运动饮料"],
+    ["pop ice", "冰沙粉"],
+    ["cokelat panas instan", "热巧克力粉"],
+    ["puding instan", "布丁粉"],
+    ["agar-agar", "果冻粉"],
+    ["popcorn", "爆米花"],
+    ["dodol", "多都糕"],
+    ["ting-ting", "花生糖"]
+    ];
+    dailyRaw.forEach(([indo, chn]) => categories.daily.words.push({ indo, chinese: chn }));
+
+    // 办公用语 (基于表格整理)
+    const officeRaw = [
+        ["rapat", "会议"],
+    ["notulen", "会议纪要"],
+    ["absensi", "考勤"],
+    ["cuti", "请假/休假"],
+    ["lembur", "加班"],
+    ["gaji", "工资"],
+    ["slip gaji", "工资条"],
+    ["tunjangan", "津贴"],
+    ["promosi", "晋升"],
+    ["mutasi", "调动"],
+    ["rekrutmen", "招聘"],
+    ["wawancara", "面试"],
+    ["kontrak kerja", "劳动合同"],
+    ["surat peringatan", "警告信"],
+    ["evaluasi kinerja", "绩效评估"],
+    ["tenggat", "截止日期"],
+    ["presentasi", "演示/简报"],
+    ["arsip", "档案"],
+    ["melaporkan", "报告(动词)"],
+    ["anggaran", "预算"],
+    ["printer", "打印机"],
+    ["fotokopi", "复印"],
+    ["scanner", "扫描仪"],
+    ["laptop", "笔记本电脑"],
+    ["jaringan internet", "网络"],
+    ["surel", "电子邮件"],
+    ["pesan instan", "即时消息"],
+    ["alat tulis kantor", "办公文具"],
+    ["bolpoin", "圆珠笔"],
+    ["kertas", "纸"],
+    ["map", "文件夹"],
+    ["ordner", "档案夹"],
+    ["stapler", "订书机"],
+    ["perforator", "打孔机"],
+    ["penghancur kertas", "碎纸机"],
+    ["papan tulis", "白板"],
+    ["spidol", "马克笔"],
+    ["proyektor", "投影仪"],
+    ["video conference", "视频会议"],
+    ["jadwal rapat", "会议日程"],
+    ["keyboard", "键盘"],
+    ["mouse", "鼠标"],
+    ["monitor", "显示器"],
+    ["hard disk", "硬盘"],
+    ["USB", "U盘"],
+    ["email blast", "邮件群发"],
+    ["kontak", "联系人"],
+    ["panggilan telepon", "通话"],
+    ["pesan suara", "语音消息"],
+    ["faksimile", "传真"],
+    ["amplop", "信封"],
+    ["kop surat digital", "电子信头"],
+    ["stempel digital", "电子印章"],
+    ["berkas", "文件/卷宗"],
+    ["map snelhecter", "快速文件夹"],
+    ["label", "标签"],
+    ["catatan", "笔记"],
+    ["post-it", "便利贴"],
+    ["whiteboard", "白板"],
+    ["penghapus", "板擦/橡皮擦"],
+    ["tugas", "任务"],
+    ["tanggung jawab", "责任"],
+    ["target", "目标"],
+    ["milestone", "里程碑"],
+    ["progres", "进展"],
+    ["update", "更新/最新情况"],
+    ["briefing", "早会/简报"],
+    ["meeting", "会议"],
+    ["one on one", "一对一沟通"],
+    ["coaching", "辅导"],
+    ["team building", "团建"],
+    ["outbound", "户外拓展"],
+    ["brainstorming", "头脑风暴"],
+    ["KPI", "关键绩效指标"],
+    ["SOP", "标准作业程序"],
+    ["workflow", "工作流程"],
+    ["timesheet", "工时表"],
+    ["reimbursement", "报销"],
+    ["teleconference", "电话会议"],
+    ["piket", "值班"],
+    ["agenda", "议程"],
+    ["moderator", "主持人"],
+    ["pemateri", "主讲人"],
+    ["diskusi", "讨论"],
+    ["tanya jawab", "问答"],
+    ["kesimpulan", "结论"],
+    ["tindak lanjut", "后续行动"],
+    ["surat masuk", "来信/收文"],
+    ["surat keluar", "发文"],
+    ["pengarsipan", "归档"],
+    ["file", "文件/档案"],
+    ["folder", "文件夹（电脑）"],
+    ["data", "数据"],
+    ["kata sandi", "密码"],
+    ["sistem", "系统"],
+    ["aplikasi", "应用程序"],
+    ["perangkat lunak", "软件"],
+    ["perangkat keras", "硬件"],
+    ["server", "服务器"],
+    ["backup", "备份"],
+    ["perjalanan dinas", "出差"],
+    ["surat tugas", "派遣函"],
+    ["biaya perjalanan", "差旅费"],
+    ["laporan perjalanan dinas", "出差报告"],
+    ["nota", "便条/票据"],
+    ["invoice", "发票"],
+    ["purchase order", "采购订单 (PO)"],
+    ["delivery order", "发货单 (DO)"],
+    ["packing list", "装箱单"],
+    ["faktur", "发票/账单"],
+    ["pembayaran", "付款"],
+    ["termin", "付款阶段/条件"],
+    ["utang", "债务"],
+    ["piutang", "应收款项"],
+    ["arus kas", "现金流"],
+    ["anggaran dasar", "公司章程/基本预算"],
+    ["persediaan", "库存/存货"],
+    ["pengadaan", "采购"],
+    ["tender", "招标"],
+    ["pengajuan", "申请/提案"],
+    ["telepon seluler", "手机"],
+    ["pulsa", "话费/充值"],
+    ["ekstensi", "分机号"],
+    ["operator", "总机/接线员"],
+    ["nada sibuk", "忙音"],
+    ["nada tunggu", "等待音/彩铃"],
+    ["sambungan langsung", "直线电话"],
+    ["kartu nama", "名片"],
+    ["alamat surel", "电子邮箱地址"],
+    ["tanda tangan basah", "湿签名/手写签名"],
+    ["paraf", "简签/小签"],
+    ["disposisi", "批示/批办"],
+    ["lembar disposisi", "批办单"],
+    ["cap", "印章/戳"],
+    ["stempel perusahaan", "公司章"],
+    ["legalisir", "公证/核证"],
+    ["pengesahan", "认证/批准"],
+    ["berkas digital", "电子文件"],
+    ["template", "模板"],
+    ["format", "格式"],
+    ["cetak", "打印"],
+    ["jilid", "装订"],
+    ["laminating", "塑封"],
+    ["gunting", "剪刀"],
+    ["selotip", "胶带"],
+    ["orientasi", "入职培训"],
+    ["pelatihan", "培训"],
+    ["sertifikasi", "认证"],
+    ["kompetensi", "能力/胜任力"],
+    ["pengembangan karir", "职业发展"],
+    ["promosi jabatan", "职位晋升"],
+    ["rotasi pekerjaan", "岗位轮换"],
+    ["demosi", "降职"],
+    ["sanksi", "处罚"],
+    ["surat peringatan", "警告信 (SP)"],
+    ["skorsing", "停工停职"],
+    ["pemutusan hubungan kerja", "终止劳动关系 (PHK)"],
+    ["pesangon", "遣散费/离职金"],
+    ["uang penghargaan masa kerja", "工龄奖"],
+    ["cuti melahirkan", "产假"],
+    ["cuti sakit", "病假"],
+    ["izin", "许可/请假"],
+    ["mangkir", "旷工"],
+    ["daftar hadir", "出勤表"],
+    ["sistem absensi", "考勤系统"],
+    ["rapat daring", "线上会议"],
+    ["tautan rapat", "会议链接"],
+    ["ruang rapat virtual", "虚拟会议室"],
+    ["latar belakang virtual", "虚拟背景"],
+    ["berbagi layar", "共享屏幕"],
+    ["mengangkat tangan virtual", "虚拟举手"],
+    ["obrolan", "聊天"],
+    ["rekaman rapat", "会议录像"],
+    ["sinyal", "信号"],
+    ["kuota internet", "网络流量"],
+    ["paket data", "数据套餐"],
+    ["WiFi kantor", "办公室无线网"],
+    ["jaringan LAN", "局域网"],
+    ["kabel ethernet", "网线"],
+    ["router", "路由器"],
+    ["VPN", "虚拟专用网络"],
+    ["firewall", "防火墙"],
+    ["antivirus", "杀毒软件"],
+    ["pembaruan sistem", "系统更新"],
+    ["cadangkan data", "备份数据"],
+    ["pulihkan data", "恢复数据"],
+    ["media sosial", "社交媒体"],
+    ["situs web", "网站"],
+    ["konten", "内容"],
+    ["desain grafis", "平面设计"],
+    ["loker", "储物柜"],
+    ["laci meja", "办公桌抽屉"],
+    ["ruang arsip", "档案室"],
+    ["ruang tunggu", "等候室"],
+    ["receptionist", "前台"],
+    ["kartu pengenal", "胸牌/工卡"],
+    ["seragam", "制服"],
+    ["dress code", "着装要求"],
+    ["rapat mingguan", "周例会"],
+    ["agenda mingguan", "周计划"],
+    ["laporan bulanan", "月报"],
+    ["evaluasi triwulan", "季度评估"],
+    ["rapat tahunan", "年会"],
+    ["kalender kerja", "工作日历"],
+    ["jam fleksibel", "弹性工作时间"],
+    ["lembur akhir pekan", "周末加班"],
+    ["ganti hari libur", "补休"],
+    ["peraturan perusahaan", "公司纪律规定"],
+    ["kode etik", "行为准则"],
+    ["visi misi", "愿景使命"],
+    ["budaya perusahaan", "企业文化"],
+    ["saran", "建议"],
+    ["penghargaan karyawan", "员工表彰"],
+    ["tim kerja", "工作小组"],
+    ["kolaborasi", "协作"],
+    ["alat perekam", "录音设备"],
+    ["kamera web", "摄像头"],
+    ["speaker", "音箱/扬声器"],
+    ["earphone", "耳机"],
+    ["pengisi daya", "充电器"],
+    ["power bank", "充电宝"],
+    ["colokan", "插头"],
+    ["adaptor", "电源适配器"],
+    ["layar", "屏幕"],
+    ["keyboard nirkabel", "无线键盘"],
+    ["mouse optik", "光学鼠标"],
+    ["hard disk eksternal", "外置硬盘"],
+    ["flash drive", "U盘/闪存盘"],
+    ["kartu memori", "存储卡"],
+    ["unduh", "下载"],
+    ["unggah", "上传"],
+    ["format berkas", "文件格式"],
+    ["kompresi", "压缩"],
+    ["simpan otomatis", "自动保存"],
+    ["kata sandi", "密码/口令"],
+    ["verifikasi dua langkah", "双重验证"],
+    ["masuk log", "登录"],
+    ["keluar log", "退出登录"],
+    ["sinkronkan", "同步 (动词)"],
+    ["pemberitahuan", "通知"],
+    ["finger print", "指纹打卡"],
+    ["face recognition", "人脸识别"],
+    ["kartu akses", "门禁卡"],
+    ["nomor induk karyawan", "员工工号"],
+    ["lencana nama", "姓名牌"],
+    ["seragam harian", "日常制服"],
+    ["batik kantor", "公司蜡染制服"],
+    ["olahraga Jumat", "周五运动"],
+    ["apel pagi", "早集合/晨会"],
+    ["pengarahan", "指示/训导"],
+    ["pembinaan", "辅导/建设"],
+    ["seminar", "研讨会"],
+    ["workshop", "工作坊/培训"],
+    ["in house training", "内部培训"],
+    ["pelatihan eksternal", "外部培训"],
+    ["ujian sertifikasi", "认证考试"],
+    ["biaya pelatihan", "培训费"],
+    ["modul pelatihan", "培训模块/教材"],
+    ["pre-test", "训前测验"],
+    ["post-test", "训后测验"],
+    ["umpan balik", "反馈"],
+    ["evaluasi", "评估"],
+    ["jenjang karir", "职业阶梯"],
+    ["pemetaan kompetensi", "能力图谱"],
+    ["manajemen bakat", "人才管理"],
+    ["mesin absensi", "打卡机"],
+    ["daftar hadir manual", "手工签到表"],
+    ["lembur", "加班"],
+    ["formulir lembur", "加班单"],
+    ["uang makan lembur", "加班餐补"],
+    ["pengajuan cuti", "请假申请"],
+    ["sisa cuti", "剩余假期"],
+    ["cuti mendadak", "临时请假"],
+    ["izin keluar kantor", "外出许可"],
+    ["surat jalan dinas", "出差路单"],
+    ["nota dinas", "内部备忘录"],
+    ["disposisi pimpinan", "领导批示"],
+    ["surat masuk", "收文"],
+    ["surat keluar", "发文"],
+    ["ekspedisi surat", "信件收发"],
+    ["buku ekspedisi", "收发登记簿"],
+    ["jadwal pengiriman", "递送时间表"],
+    ["tanda terima", "签收回执"],
+    ["amplop dinas", "公函信封"],
+    ["stempel dinas", "公务印章"],
+    ["cap pos", "邮戳"],
+    ["materai", "印花税票"],
+    ["klip kertas", "回形针"],
+    ["binder klip", "长尾夹"],
+    ["stapler besar", "重型订书机"],
+    ["buku tamu elektronik", "电子访客登记簿"],
+    ["kartu pengenal tamu", "访客证"],
+    ["akses terbatas", "受限出入"],
+    ["pengamanan data", "数据安全"],
+    ["kerahasiaan data", "数据保密"],
+    ["NDA", "保密协议"],
+    ["hak cipta karya", "职务作品版权"],
+    ["GDPR", "通用数据保护条例"],
+    ["UU ITE", "信息与电子交易法"],
+    ["tanda tangan basah", "湿签名"],
+    ["meterai elektronik", "电子印花税票"],
+    ["e-meterai", "电子印花"],
+    ["kontrak digital", "数字合同"],
+    ["sertifikat digital", "数字证书"],
+    ["token bank", "银行动态令牌"],
+    ["pengarsipan digital", "数字归档"],
+    ["arsip vital", "重要档案"],
+    ["retensi arsip", "档案保管期限"],
+    ["pemusnahan arsip", "档案销毁"],
+    ["berita acara pemusnahan", "档案销毁记录"],
+    ["kartu kendali arsip", "档案管理卡"],
+    ["buku peminjaman arsip", "档案借阅登记簿"],
+    ["perpustakaan perusahaan", "公司图书馆"],
+    ["langganan jurnal", "期刊订阅"],
+    ["database riset", "研究数据库"],
+    ["knowledge sharing", "知识分享"],
+    ["mentoring", "指导/导师制"],
+    ["budaya kerja", "工作文化"],
+    ["employee engagement", "员工敬业度"],
+    ["work-life balance", "工作与生活平衡"],
+    ["flexible working hours", "弹性工作时间"],
+    ["work from home", "在家办公"],
+    ["work from anywhere", "随处办公"],
+    ["hybrid working", "混合办公"],
+    ["absen online", "在线考勤"],
+    ["selfie absen", "自拍考勤"],
+    ["lokasi absen", "打卡地点"],
+    ["lembur malam", "夜班加班"],
+    ["kerajinan", "出勤/勤勉"],
+    ["ketidakhadiran", "缺勤"],
+    ["surat keterangan dokter", "医生证明"],
+    ["MCU", "体检"],
+    ["hasil lab", "实验室检查结果"],
+    ["program kesehatan", "健康计划"],
+    ["BPJS mandiri", "自付BPJS"],
+    ["dokter panel", "定点医生"],
+    ["reimbursment obat", "药费报销"],
+    ["kacamata kerja", "工作护镜"],
+    ["seragam keselamatan", "安全制服"],
+    ["name tag", "胸牌/名牌"],
+    ["locker room", "更衣室"],
+    ["lemari besi", "铁柜"],
+    ["loker ganti baju", "更衣柜"],
+    ["pantry", "茶水间"],
+    ["kulkas kantor", "办公室冰箱"],
+    ["microwave kantor", "办公室微波炉"],
+    ["dispenser", "饮水机"],
+    ["meja pantry", "茶水间桌子"],
+    ["wastafel pantry", "茶水间洗手盆"],
+    ["spons cuci piring", "洗碗海绵"],
+    ["tempat cuci tangan", "洗手处"],
+    ["kotak P3K", "急救箱"],
+    ["tandu", "担架"],
+    ["kursi roda", "轮椅"],
+    ["tangga darurat", "紧急楼梯"],
+    ["titik kumpul", "集合点"],
+    ["emergency exit", "紧急出口"],
+    ["fire extinguisher", "灭火器"],
+    ["alarm kebakaran", "火警报警器"],
+    ["sirine", "警报器"],
+    ["pengumuman darurat", "紧急广播"],
+    ["assembly point", "集合点/集中区"],
+    ["headcount", "清点人数"],
+    ["orang hilang", "失踪人员"],
+    ["hotdesk", "共享办公桌"],
+    ["locker karyawan", "员工储物柜"],
+    ["area istirahat", "休息区"],
+    ["mesin kopi", "咖啡机"],
+    ["dispenser air", "饮水机"],
+    ["galon", "桶装水"],
+    ["teh celup", "茶包"],
+    ["gula pasir", "砂糖"],
+    ["krimer", "奶精"],
+    ["gelas kertas", "纸杯"],
+    ["sendok aduk", "搅拌棒"],
+    ["pengharum tangan", "免洗洗手液"],
+    ["tisu basah", "湿纸巾"],
+    ["tempat sampah daur ulang", "分类垃圾桶"],
+    ["sampah kertas", "纸类垃圾"],
+    ["botol plastik", "塑料瓶"],
+    ["kampanye go green", "绿色环保运动"],
+    ["hemat kertas", "节约用纸"],
+    ["tanda tangan elektronik tersertifikasi", "认证电子签名"],
+    ["meterai elektronik", "电子印花税票"],
+    ["e-faktur", "电子税务发票"],
+    ["e-bupot", "电子预扣税单"],
+    ["bukti potong", "预扣税凭证"],
+    ["pelaporan daring", "在线申报"],
+    ["arsip digital", "电子档案"],
+    ["dokumentasi proyek", "项目文件"],
+    ["rencana kerja", "工作计划"],
+    ["laporan kemajuan", "进度报告"],
+    ["milestone proyek", "项目里程碑"],
+    ["rapat tinjauan manajemen", "管理评审会议"],
+    ["permintaan perubahan", "变更请求"],
+    ["analisis dampak", "影响分析"],
+    ["persetujuan perubahan", "变更批准"],
+    ["uji coba", "试运行"],
+    ["go live", "上线"],
+    ["user acceptance test", "用户验收测试"],
+    ["training pengguna", "用户培训"],
+    ["buku panduan pengguna", "用户手册"],
+    ["troubleshooting", "故障排除"],
+    ["FAQ", "常见问题解答"],
+    ["helpdesk IT", "IT服务台"],
+    ["tiket bantuan", "服务请求单"],
+    ["prioritas", "优先级"],
+    ["SLA", "服务水平协议"],
+    ["incident report", "事故报告"],
+    ["change management", "变更管理"],
+    ["risk assessment", "风险评估"],
+    ["mitigasi risiko", "风险缓解"],
+    ["business continuity", "业务连续性"],
+    ["disaster recovery", "灾难恢复"],
+    ["kertas HVS", "HVS复印纸"],
+    ["kertas A4", "A4纸"],
+    ["kertas F4", "F4纸"],
+    ["folio bergaris", "横线信纸"],
+    ["buku catatan", "笔记本"],
+    ["notes kecil", "小记录本"],
+    ["isi binder", "活页纸"],
+    ["pembatas buku", "书签"],
+    ["sticky notes", "便利贴"],
+    ["label nama", "姓名标签"],
+    ["label alamat", "地址标签"],
+    ["printer inkjet", "喷墨打印机"],
+    ["printer laser", "激光打印机"],
+    ["tinta printer", "打印机墨水"],
+    ["kartrid toner", "硒鼓"],
+    ["kertas macet", "卡纸"],
+    ["perbaikan printer", "打印机维修"],
+    ["LCD proyektor", "液晶投影仪"],
+    ["kabel VGA", "VGA线"],
+    ["kabel HDMI", "HDMI线"],
+    ["adaptor display port", "DP转换器"],
+    ["layar proyeksi", "投影屏幕"],
+    ["remote presentasi", "翻页笔"],
+    ["pointer laser", "激光笔"],
+    ["whiteboard cleaner", "白板清洁剂"],
+    ["perangkat lunak akuntansi", "会计软件"],
+    ["spreadsheet", "电子表格"],
+    ["pivot table", "数据透视表"],
+    ["rumus excel", "Excel公式"],
+    ["dashboard", "数据看板"],
+    ["slide presentasi", "演示幻灯片"],
+    ["template presentasi", "演示模板"],
+    ["grafik batang", "柱状图"],
+    ["grafik garis", "折线图"],
+    ["diagram lingkaran", "饼图"],
+    ["video conference room", "视频会议室"],
+    ["password WiFi tamu", "访客WiFi密码"],
+    ["whiteboard interaktif", "交互式白板"],
+    ["mesin hitung", "计算器/点钞机"],
+    ["mesin fotokopi warna", "彩色复印机"],
+    ["scan to email", "扫描到邮件"],
+    ["mesin jilid spiral", "螺旋装订机"],
+    ["klip kertas besar", "大号回形针"],
+    ["stempel lunas", "已付清章"],
+    ["stempel diterima", "已收章"],
+    ["label rahasia", "机密标签"],
+    ["alur persetujuan", "审批流程"],
+    ["notifikasi email", "邮件通知"],
+    ["pengingat otomatis", "自动提醒"],
+    ["arsip tidak aktif", "不常用档案"],
+    ["penilaian kinerja tahunan", "年度绩效评估"],
+    ["form penilaian", "评估表"],
+    ["umpan balik 360", "360度反馈"],
+    ["target individu", "个人目标"],
+    ["sasaran kinerja pegawai", "员工绩效目标"],
+    ["kontrak kinerja", "绩效合同"],
+    ["remunerasi", "薪酬体系"],
+    ["insentif", "奖金/激励"],
+    ["bonus tahunan", "年终奖"],
+    ["THR", "宗教节日津贴"],
+    ["surat edaran THR", "节日津贴通知"],
+    ["pinjaman lunak", "优惠贷款"],
+    ["dana darurat", "应急基金"],
+    ["pengembangan kompetensi", "能力发展"],
+    ["sertifikasi profesi", "职业认证"],
+    ["BNSP", "国家职业认证委员会"],
+    ["LSP", "职业认证机构"],
+    ["asesor", "评估师"],
+    ["uji kompetensi", "能力测试"],
+    ["sertifikat kompetensi", "能力证书"],
+    ["magang", "实习"],
+    ["peserta magang", "实习生"],
+    ["mentor", "导师"],
+    ["pembimbing", "辅导员"],
+    ["laporan magang", "实习报告"],
+    ["stok opname", "库存盘点"],
+    ["selisih stok", "库存差异"],
+    ["barang rusak", "损坏品"],
+    ["retur barang", "退货"],
+    ["nota retur", "退货单"],
+    ["faktur pembelian", "采购发票"],
+    ["surat jalan pengiriman", "送货单"],
+    ["purchase requisition", "请购单 (PR)"],
+    ["purchase order", "采购订单 (PO)"],
+    ["vendor terdaftar", "已注册供应商"],
+    ["evaluasi vendor", "供应商评估"],
+    ["kontrak tahunan", "年度合同"],
+    ["negosiasi harga", "议价"],
+    ["pembanding harga", "比价"],
+    ["nilai kontrak", "合同金额"],
+    ["addendum kontrak", "合同补充协议"],
+    ["berita acara penyelesaian", "完工记录"],
+    ["serah terima barang", "货物移交"],
+    ["berita acara serah terima barang", "货物移交记录"],
+    ["inventaris kantor", "办公室资产"],
+    ["penghapusan aset", "资产报废"],
+    ["lelang internal", "内部拍卖"],
+    ["ruang server", "服务器机房"],
+    ["rack server", "服务器机柜"],
+    ["patch panel", "配线架"],
+    ["laporan keuangan tahunan", "年度财务报告"],
+    ["audit internal", "内部审计"],
+    ["audit eksternal", "外部审计"],
+    ["KAP", "会计师事务所"],
+    ["laporan auditor", "审计报告"],
+    ["pengendalian internal", "内部控制"],
+    ["fraud", "欺诈"],
+    ["gratifikasi", "馈赠"],
+    ["kode etik auditor", "审计师职业道德"],
+    ["pencatatan keuangan", "财务记账"],
+    ["jurnal umum", "普通日记账"],
+    ["buku besar", "总账"],
+    ["neraca saldo", "试算平衡表"],
+    ["laporan laba rugi", "损益表"],
+    ["neraca keuangan", "资产负债表"],
+    ["arus kas operasi", "经营活动现金流"],
+    ["investasi", "投资"],
+    ["depresiasi", "折旧"],
+    ["amortisasi", "摊销"],
+    ["aset lancar", "流动资产"],
+    ["liabilitas", "负债"],
+    ["ekuitas", "权益"],
+    ["dividen", "股息"],
+    ["laba ditahan", "留存收益"],
+    ["RUPS", "股东大会"],
+    ["aplikasi HRIS", "人力资源信息系统"],
+    ["portal karyawan", "员工门户网站"],
+    ["ESS", "员工自助服务"],
+    ["onboarding", "入职流程"],
+    ["offboarding", "离职流程"],
+    ["exit interview", "离职面谈"],
+    ["clearance", "离职结清"],
+    ["surat pengalaman kerja", "工作证明"],
+    ["referensi", "推荐信"],
+    ["talent pool", "人才库"],
+    ["kaderisasi", "梯队培养"],
+    ["coaching clinic", "辅导讲座"],
+    ["town hall meeting", "全员大会"],
+    ["CEO message", "总裁寄语"],
+    ["newsletter internal", "内部通讯"],
+    ["bulletin board", "公告栏"],
+    ["intranet", "内联网"],
+    ["knowledge management", "知识管理"],
+    ["SOP terbaru", "最新标准作业程序"],
+    ["instruksi kerja", "作业指导书"],
+    ["checklist harian", "每日检查清单"],
+    ["form inspeksi", "检查表"],
+    ["corrective action", "纠正措施"],
+    ["preventive action", "预防措施"],
+    ["continuous improvement", "持续改进"]
+    ];
+    officeRaw.forEach(([indo, chn]) => categories.office.words.push({ indo, chinese: chn }));
+
+    // 园区管理
+    const estateRaw = [
+        ["kawasan industri", "工业园区"],
+    ["infrastruktur", "基础设施"],
+    ["pengelolaan", "管理"],
+    ["limbah", "废物/废水"],
+    ["drainase", "排水系统"],
+    ["perizinan", "许可/准证"],
+    ["tata ruang", "空间规划"],
+    ["zona", "区域"],
+    ["fasilitas", "设施"],
+    ["keamanan", "安全/保安"],
+    ["kebersihan", "清洁卫生"],
+    ["listrik", "电力"],
+    ["air bersih", "清洁水"],
+    ["pemeliharaan", "维护保养"],
+    ["retribusi", "费用/收费"],
+    ["pergudangan", "仓储"],
+    ["kawasan berikat", "保税区"],
+    ["inspeksi", "检查/视察"],
+    ["standar operasional prosedur", "标准操作流程"],
+    ["pengelola kawasan", "园区管理方"],
+    ["kebakaran", "火灾"],
+    ["pemadam kebakaran", "消防队"],
+    ["pos keamanan", "保安亭"],
+    ["akses keluar masuk", "出入通道"],
+    ["area parkir", "停车场"],
+    ["bongkar muat", "装卸"],
+    ["alat pemadam api ringan", "灭火器"],
+    ["sertifikat laik operasi", "运营合格证"],
+    ["keselamatan dan kesehatan kerja", "职业安全与健康"],
+    ["lingkungan hidup", "环境/生态"],
+    ["AMDAL", "环境影响分析"],
+    ["UKL-UPL", "环境管理与监测计划"],
+    ["limbah B3", "有毒有害废物"],
+    ["pengolahan air limbah", "污水处理"],
+    ["daur ulang", "循环利用"],
+    ["penghijauan", "绿化"],
+    ["jalur evakuasi", "疏散通道"],
+    ["tenaga kerja", "劳动力/员工"],
+    ["sanitasi", "卫生设施"],
+    ["peraturan kawasan", "园区规定"],
+    ["akses kontrol", "门禁控制"],
+    ["CCTV", "监控摄像"],
+    ["pagar", "围栏/围墙"],
+    ["pos satpam", "保安岗亭"],
+    ["patroli", "巡逻"],
+    ["penanganan darurat", "应急处理"],
+    ["kotak P3K", "急救箱"],
+    ["manajemen krisis", "危机管理"],
+    ["polusi", "污染"],
+    ["emisi", "排放"],
+    ["kebisingan", "噪音"],
+    ["limbah padat", "固体废物"],
+    ["instalasi pengolahan air", "水处理设施"],
+    ["saluran pembuangan", "排水沟"],
+    ["penerangan", "照明"],
+    ["trotoar", "人行道"],
+    ["bangunan", "建筑物"],
+    ["lahan parkir", "停车用地"],
+    ["bebas banjir", "不淹水/防洪"],
+    ["kesesuaian lahan", "土地适宜性"],
+    ["logo kawasan", "园区标识"],
+    ["plang nama", "名称牌"],
+    ["pusat informasi", "信息中心"],
+    ["puskesmas pembantu", "辅助卫生中心"],
+    ["klinik", "诊所"],
+    ["bank", "银行"],
+    ["ATM", "自动取款机"],
+    ["kantin", "食堂/餐厅"],
+    ["minimarket", "便利店"],
+    ["musala", "礼拜室"],
+    ["masjid", "清真寺"],
+    ["toilet", "洗手间"],
+    ["air minum", "饮用水"],
+    ["wifi", "无线网络"],
+    ["pengelola gedung", "楼宇管理"],
+    ["service charge", "服务费"],
+    ["iuran keamanan", "保安费"],
+    ["rapat pengurus", "管委会会议"],
+    ["berita acara", "记录/备忘录"],
+    ["buku tamu", "访客登记簿"],
+    ["pos penjagaan", "警卫哨"],
+    ["ruang kontrol", "控制室"],
+    ["petugas kebersihan", "清洁工"],
+    ["taman", "公园/花园"],
+    ["lapangan", "广场/空地"],
+    ["gedung serbaguna", "多功能楼"],
+    ["aula", "礼堂"],
+    ["tempat ibadah", "礼拜场所"],
+    ["pusat kebugaran", "健身中心"],
+    ["jembatan", "桥"],
+    ["gotong royong", "互助合作"],
+    ["waktu operasional", "运营时间"],
+    ["kendaraan operasional", "运营车辆"],
+    ["kartu identitas", "工卡"],
+    ["gelang pengenal", "识别手环"],
+    ["titik kumpul", "集合点"],
+    ["sirine", "警笛"],
+    ["hydrant", "消防栓"],
+    ["selang pemadam", "消防水带"],
+    ["emergency shower", "紧急喷淋"],
+    ["biaya pengelolaan", "管理费"],
+    ["tarif dasar", "基本费率"],
+    ["meteran", "计量表"],
+    ["instalasi listrik", "电力装置"],
+    ["daya listrik", "电功率"],
+    ["pemadaman listrik", "停电"],
+    ["genset", "发电机组"],
+    ["panel surya", "太阳能板"],
+    ["air tanah", "地下水"],
+    ["sumur resapan", "渗水井"],
+    ["biopori", "生物孔"],
+    ["ruang terbuka hijau", "绿色开放空间"],
+    ["kebun", "园地/种植园"],
+    ["papan informasi", "公告栏"],
+    ["pengumuman", "公告"],
+    ["surat pemberitahuan", "通知书"],
+    ["jam malam", "宵禁"],
+    ["penerimaan tamu", "接待客人"],
+    ["registrasi", "登记"],
+    ["pos administrasi", "行政岗亭"],
+    ["papan pengumuman digital", "电子公告板"],
+    ["sistem informasi kawasan", "园区信息系统"],
+    ["aplikasi penyewa", "租户应用"],
+    ["lapor kerusakan", "报修"],
+    ["teknisi", "维修工"],
+    ["pemadam listrik", "电闸"],
+    ["sekring", "保险丝"],
+    ["stop kontak", "插座"],
+    ["kabel ekstensi", "延长线"],
+    ["forklift", "叉车"],
+    ["hand pallet", "手动液压搬运车"],
+    ["rak penyimpanan", "货架"],
+    ["palet", "托盘"],
+    ["shrink wrap", "缠绕膜"],
+    ["strapping band", "打包带"],
+    ["alat pemotong strapping", "打包带剪刀"],
+    ["area loading dock", "装卸平台区"],
+    ["dock leveller", "登车桥"],
+    ["ruang pendingin", "冷藏室"],
+    ["ruang pembeku", "冷冻库"],
+    ["monitoring suhu", "温度监控"],
+    ["generator set cadangan", "备用发电机组"],
+    ["penangkal petir", "避雷针"],
+    ["grounding", "接地"],
+    ["mesin antrean", "排队叫号机"],
+    ["loket pembayaran", "缴费窗口"],
+    ["loket informasi", "咨询台"],
+    ["ruang laktasi", "哺乳室"],
+    ["ruang bermain anak", "儿童游乐室"],
+    ["penitipan anak", "托儿所"],
+    ["klinik gigi", "牙科诊所"],
+    ["apotek", "药房"],
+    ["olahraga bersama", "集体运动"],
+    ["senam pagi", "早操"],
+    ["lomba kebersihan", "卫生评比"],
+    ["penghijauan lingkungan", "环境绿化"],
+    ["buang sampah pada tempatnya", "请将垃圾扔到指定地点"],
+    ["kawasan bebas asap rokok", "无烟区"],
+    ["smoking area", "吸烟区"],
+    ["tempat cuci tangan", "洗手点"],
+    ["sabun antiseptik", "消毒洗手液"],
+    ["pengukuran suhu", "体温检测"],
+    ["masker", "口罩"],
+    ["pelindung wajah", "面罩"],
+    ["jarak aman", "安全距离"],
+    ["tanda silang", "禁止标记"],
+    ["disinfeksi rutin", "定期消毒"],
+    ["penyemprotan massal", "大规模喷洒"],
+    ["satgas COVID-19", "新冠工作组"]
+    ];
+    estateRaw.forEach(([indo, chn]) => categories.estate.words.push({ indo, chinese: chn }));
+
+    // 对接政府
+    const govRaw = [
+          ["dinas", "局/处"],
+    ["instansi", "机构/部门"],
+    ["regulasi", "法规/条例"],
+    ["perda", "地方法规"],
+    ["perizinan", "许可"],
+    ["rekomendasi", "建议书/推荐信"],
+    ["surat keputusan", "决定书 (SK)"],
+    ["pejabat", "官员"],
+    ["birokrasi", "官僚/行政系统"],
+    ["laporan", "报告"],
+    ["pengawasan", "监管/监督"],
+    ["koordinasi", "协调"],
+    ["rapat koordinasi", "协调会议"],
+    ["nota dinas", "公务便笺/内部备忘录"],
+    ["stempel", "公章/印章"],
+    ["tanda tangan", "签名"],
+    ["kop surat", "信头"],
+    ["nomor surat", "发文字号"],
+    ["lampiran", "附件"],
+    ["tembusan", "抄送"],
+    ["undang-undang", "法律"],
+    ["peraturan pemerintah", "政府条例"],
+    ["keputusan presiden", "总统决定书"],
+    ["peraturan menteri", "部长条例"],
+    ["surat edaran", "通知/通函"],
+    ["pelayanan terpadu satu pintu", "一站式综合服务 (PTSP)"],
+    ["OSS", "网上单一提交系统"],
+    ["izin usaha", "营业执照"],
+    ["izin lokasi", "选址许可"],
+    ["izin lingkungan", "环境许可"],
+    ["lembaga", "机构/局"],
+    ["kementerian", "部委"],
+    ["badan", "局/署"],
+    ["komisi", "委员会"],
+    ["rapat dengar pendapat", "听证会"],
+    ["audiensi", "拜会/听取意见"],
+    ["lobi", "游说"],
+    ["naskah dinas", "公文文本"],
+    ["stempel resmi", "公章"],
+    ["tanda tangan elektronik", "电子签名"],
+    ["instruksi presiden", "总统指示"],
+    ["peraturan kepala daerah", "地方首长条例"],
+    ["anggaran pendapatan dan belanja daerah", "地方预算 (APBD)"],
+    ["anggaran pendapatan dan belanja negara", "国家预算 (APBN)"],
+    ["kementerian koordinator", "协调部"],
+    ["badan usaha milik negara", "国有企业 (BUMN)"],
+    ["badan usaha milik daerah", "地方国有企业 (BUMD)"],
+    ["perseroan terbatas", "有限责任公司 (PT)"],
+    ["yayasan", "基金会"],
+    ["surat kuasa", "授权书"],
+    ["berita acara", "纪要/记录"],
+    ["memorandum of understanding", "谅解备忘录"],
+    ["perjanjian", "协议"],
+    ["kontrak", "合同"],
+    ["jaminan", "担保/保证金"],
+    ["domisili perusahaan", "公司注册地址"],
+    ["NPWP", "纳税人税号"],
+    ["TDP", "公司注册证"],
+    ["SIUP", "贸易营业许可证"],
+    ["NIB", "企业注册号"],
+    ["inspektur", "监察员"],
+    ["audit", "审计"],
+    ["pemeriksaan", "检查/审计"],
+    ["penyuluhan", "指导/培训"],
+    ["sosialisasi", "宣导/推广"],
+    ["pelaporan", "报告/申报"],
+    ["kewajiban", "义务"],
+    ["surat pemberitahuan", "通知书"],
+    ["sanggahan", "异议/反驳"],
+    ["banding", "上诉"],
+    ["wajib pajak", "纳税人"],
+    ["nomor pokok wajib pajak", "纳税人识别号"],
+    ["faktur pajak", "税务发票"],
+    ["PPN", "增值税"],
+    ["PPh", "所得税"],
+    ["cukai", "消费税"],
+    ["bea masuk", "进口关税"],
+    ["bea keluar", "出口关税"],
+    ["pengurusan dokumen", "文件办理"],
+    ["agen", "代理"],
+    ["lurah", "村长/街道办负责人"],
+    ["camat", "镇长/区负责人"],
+    ["bupati", "县长"],
+    ["walikota", "市长"],
+    ["gubernur", "省长"],
+    ["provinsi", "省"],
+    ["kabupaten", "县"],
+    ["kota", "市"],
+    ["desa", "村"],
+    ["kelurahan", "行政村/居委会"],
+    ["kecamatan", "镇/区"],
+    ["surat keterangan", "证明书"],
+    ["akta pendirian", "公司章程/成立契约"],
+    ["notaris", "公证人"],
+    ["pengesahan", "批准/认证"],
+    ["perpanjangan izin", "许可延期"],
+    ["persetujuan", "批准/同意"],
+    ["verifikasi", "核实"],
+    ["integrasi", "整合"],
+    ["diseminasi", "宣传/传播"],
+    ["pajak daerah", "地方税"],
+    ["pajak bumi dan bangunan", "土地及建筑税 (PBB)"],
+    ["surat pemberitahuan pajak terutang", "应纳税款通知书 (SPPT)"],
+    ["bea perolehan hak atas tanah dan bangunan", "土地和建筑权取得税 (BPHTB)"],
+    ["izin mendirikan bangunan", "建筑许可证 (IMB)"],
+    ["persetujuan bangunan gedung", "建筑批准书 (PBG)"],
+    ["sertifikat laik fungsi", "功能合格证 (SLF)"],
+    ["andalalin", "交通影响分析"],
+    ["upaya pengelolaan lingkungan dan upaya pemantauan lingkungan", "环境管理和环境监测努力 (UKL-UPL)"],
+    ["badan pengawas", "监督机构"],
+    ["dinas tenaga kerja", "劳工局"],
+    ["BPJS Ketenagakerjaan", "劳工社会保障机构"],
+    ["BPJS Kesehatan", "健康社会保障机构"],
+    ["jaminan hari tua", "养老保障"],
+    ["jaminan kecelakaan kerja", "工伤保障"],
+    ["upah minimum", "最低工资"],
+    ["serikat pekerja", "工会"],
+    ["perjanjian kerja bersama", "集体劳动合同 (PKB)"],
+    ["bipartit", "双边（劳资协商机构）"],
+    ["tripartit", "三方（政府、雇主、工会）"],
+    ["persetujuan prinsip", "原则许可"],
+    ["izin prinsip", "原则许可"],
+    ["izin usaha tetap", "永久营业执照"],
+    ["perpanjangan izin usaha", "营业执照延期"],
+    ["tanda daftar perusahaan", "公司注册证 (TDP)"],
+    ["surat izin tempat usaha", "营业场所许可证 (SITU)"],
+    ["surat izin gangguan", "扰民许可 (HO)"],
+    ["klasifikasi baku lapangan usaha indonesia", "印尼行业标准分类 (KBLI)"],
+    ["daftar negatif investasi", "投资负面清单"],
+    ["insentif pajak", "税收优惠"],
+    ["tax holiday", "免税期"],
+    ["tax allowance", "税收津贴"],
+    ["fasilitas bea masuk", "关税便利"],
+    ["kawasan ekonomi khusus", "经济特区 (KEK)"],
+    ["dewan perwakilan rakyat", "国会 (DPR)"],
+    ["dewan perwakilan rakyat daerah", "地方议会 (DPRD)"],
+    ["nota kesepahaman", "谅解备忘录"],
+    ["penandatanganan", "签署"],
+    ["materai", "印花税票"],
+    ["legalisir", "公证/认证"],
+    ["Kementerian Ketenagakerjaan", "劳工部"],
+    ["Dinas Tenaga Kerja dan Transmigrasi", "劳工与移民局"],
+    ["serikat buruh", "工会"],
+    ["mogok kerja", "罢工"],
+    ["unjuk rasa", "示威/抗议"],
+    ["aksi damai", "和平行动"],
+    ["perjanjian kerja waktu tertentu", "固定期限劳动合同 (PKWT)"],
+    ["perjanjian kerja waktu tidak tertentu", "无固定期限劳动合同 (PKWTT)"],
+    ["outsourcing", "外包/劳务派遣"],
+    ["perusahaan penyedia jasa", "劳务派遣公司"],
+    ["upah lembur", "加班费"],
+    ["istirahat mingguan", "周休"],
+    ["cuti tahunan", "年假"],
+    ["cuti besar", "长期休假"],
+    ["BPJS Kesehatan mandiri", "自缴健康社保"],
+    ["BPJS Ketenagakerjaan program JKK", "工伤保险计划"],
+    ["Jaminan Kematian", "身故保障 (JKM)"],
+    ["kartu BPJS", "BPJS卡"],
+    ["faskes tingkat pertama", "一级医疗机构"],
+    ["faskes rujukan", "转诊医疗机构"],
+    ["surat rujukan", "转诊单"],
+    ["obat generik", "非专利药"],
+    ["obat paten", "专利药"],
+    ["apotek rujukan", "定点药房"],
+    ["program rujuk balik", "回转诊计划"],
+    ["pelayanan satu pintu", "一站式服务"],
+    ["standar pelayanan", "服务标准"],
+    ["maklumat pelayanan", "服务承诺"],
+    ["survey kepuasan masyarakat", "公众满意度调查"],
+    ["indeks kepuasan masyarakat", "公众满意度指数"],
+    ["pengaduan online", "在线投诉"],
+    ["SP4N Lapor!", "国家公共服务投诉系统"],
+    ["tindak lanjut pengaduan", "投诉跟进"],
+    ["inspektorat", "监察局"],
+    ["BPK", "审计署"],
+    ["BPKP", "金融与发展监督局"],
+    ["gratifikasi online", "在线馈赠申报"],
+    ["LHKPN", "官员财产申报"],
+    ["LHKASN", "公务员财产申报"],
+    ["WTP", "无保留意见审计报告"],
+    ["WDP", "保留意见审计报告"],
+    ["disclaimer", "无法表示意见"],
+    ["evaluasi kinerja pemerintah", "政府绩效评估"],
+    ["akuntabilitas kinerja", "绩效问责"],
+    ["SAKIP", "政府机构绩效问责制"],
+    ["reformasi birokrasi tematik", "专题行政改革"],
+    ["zona integritas", "廉政区"],
+    ["WBK", "廉政建设称号"],
+    ["WBBM", "清廉政务区"],
+    ["mal pelayanan publik", "公共服务综合体"],
+    ["perda kawasan industri", "工业园区地方法规"],
+    ["insentif daerah", "地方优惠政策"],
+    ["keringanan pajak", "税收减免"],
+    ["bea masuk ditanggung pemerintah", "政府承担进口关税"],
+    ["kemudahan impor tujuan ekspor", "出口目的进口便利"],
+    ["gudang berikat", "保税仓库"],
+    ["kawasan berikat", "保税区"],
+    ["kemudahan fiskal", "财税便利"],
+    ["BKPM", "投资协调委员会"],
+    ["PTSP", "一站式综合服务中心"],
+    ["NIB berlaku", "NIB有效"],
+    ["pelaporan kegiatan penanaman modal", "投资活动报告 (LKPM)"],
+    ["LKPM online", "在线投资报告"],
+    ["pengawasan penanaman modal", "投资监管"],
+    ["kepatuhan hukum", "法律合规"],
+    ["due diligence", "尽职调查"],
+    ["appraisal", "评估/鉴定"],
+    ["valuasi", "估值"],
+    ["jaminan fidusia", "信托担保"],
+    ["hak cipta", "版权"],
+    ["merek dagang", "商标"],
+    ["paten", "专利"],
+    ["DJKI", "知识产权总局"],
+    ["hak atas tanah", "土地权利"],
+    ["pelepasan hak", "放弃权利"],
+    ["pembebasan tanah", "土地征用"],
+    ["ganti rugi", "赔偿"],
+    ["konsinyasi", "提存"],
+    ["hibah tanah", "土地赠与"],
+    ["tanah negara", "国家土地"],
+    ["tanah wakaf", "捐赠地"],
+    ["girik", "传统土地证明"],
+    ["letter C", "C字土地登记簿"],
+    ["sporadik", "零散土地确权"],
+    ["pron", "国家土地登记册"],
+    ["PTSL", "完整系统土地登记"],
+    ["redistribusi tanah", "土地分配"],
+    ["reforma agraria", "土地改革"],
+    ["batas tanah", "土地界限"],
+    ["patok batas", "界桩"],
+    ["sengketa tanah", "土地纠纷"],
+    ["mediasi pertanahan", "土地调解"],
+    ["badan pertanahan nasional", "国家土地局 (ATR/BPN)"],
+    ["Kantor Pertanahan", "土地局地方办事处"],
+    ["loket pertanahan", "土地服务窗口"],
+    ["buku tanah", "土地簿"],
+    ["surat ukur", "丈量图"],
+    ["pemetaan partisipatif", "参与式测绘"],
+    ["e-KTP", "电子身份证"],
+    ["KTP-el", "电子身份证"],
+    ["akta kelahiran", "出生证明"],
+    ["surat kenal lahir", "出生知情书"],
+    ["surat pindah", "迁移证明"],
+    ["surat datang", "迁入证明"],
+    ["buku nikah", "结婚证册"],
+    ["duplikat buku nikah", "结婚证副本"],
+    ["akta cerai", "离婚证"],
+    ["surat kematian", "死亡证明"],
+    ["ahli waris sah", "合法继承人"],
+    ["wasiat", "遗嘱"],
+    ["hibah wasiat", "遗嘱赠与"],
+    ["waris", "继承"],
+    ["pengadilan agama", "宗教法院"],
+    ["dispensasi", "特许/豁免"],
+    ["izin keramaian", "集会许可"],
+    ["surat keterangan catatan kepolisian", "无犯罪记录证明 (SKCK)"],
+    ["sidik jari", "指纹采集"],
+    ["wawancara SKCK", "无犯罪记录证明面谈"],
+    ["surat kehilangan", "遗失证明"],
+    ["barang temuan", "失物"],
+    ["dompet hilang", "钱包丢失"],
+    ["lapor diri", "报到"],
+    ["buku pengawasan orang asing", "外国人监管册 (BPOA)"],
+    ["kepolisian", "警察局"],
+    ["KTP sementara", "临时身份证"],
+    ["pindah domisili", "迁移户籍"],
+    ["surat pengantar RT/RW", "社区介绍信"],
+    ["rukun tetangga", "邻里小组 (RT)"],
+    ["rukun warga", "居民组 (RW)"],
+    ["kelurahan", "居委会"],
+    ["kecamatan", "镇"],
+    ["surat keterangan tidak mampu", "贫困证明"],
+    ["bantuan langsung tunai", "直接现金援助"],
+    ["subsidi", "补贴"],
+    ["retribusi sampah", "垃圾费"],
+    ["izin tetangga", "邻居同意书"],
+    ["musyawarah", "协商"],
+    ["mufakat", "共识"],
+    ["swadaya masyarakat", "社区自筹"],
+    ["gotong royong", "互助"],
+    ["karang taruna", "青年社团"],
+    ["PKK", "家庭福利运动"],
+    ["posyandu", "综合卫生服务站"],
+    ["vaksinasi", "疫苗接种"],
+    ["imunisasi", "免疫"],
+    ["pelayanan kesehatan", "医疗服务"],
+    ["jaminan kesehatan nasional", "国家健康保险 (JKN)"],
+    ["wajib lapor ketenagakerjaan", "用工强制报告"],
+    ["surat keterangan sehat", "健康证明"],
+    ["surat kelakuan baik", "无犯罪记录证明"],
+    ["catatan kepolisian", "警方记录"],
+    ["Paspor", "护照"],
+    ["visa kerja", "工作签证"],
+    ["KITAS", "临时居留许可证"],
+    ["KITAP", "永久居留许可证"],
+    ["imigrasi", "移民局"],
+    ["wajib lapor", "报到义务"],
+    ["surat tanda terima", "收据证明"],
+    ["pencekalan", "禁止出境"],
+    ["deportasi", "驱逐出境"],
+    ["kejaksaan", "检察院"],
+    ["pengadilan negeri", "地方法院"],
+    ["pengadilan agama", "宗教法院"],
+    ["pengadilan tata usaha negara", "行政法院"],
+    ["Mahkamah Agung", "最高法院"],
+    ["Mahkamah Konstitusi", "宪法法院"],
+    ["komisi yudisial", "司法委员会"],
+    ["ombudsman", "申诉专员"],
+    ["KPK", "肃贪委员会"],
+    ["gratifikasi", "馈赠"],
+    ["korupsi", "腐败"],
+    ["perizinan berusaha terintegrasi", "综合营业许可"],
+    ["perizinan berbasis risiko", "风险为基础的许可"],
+    ["surat pernyataan kesanggupan", "承诺声明书"],
+    ["izin mendirikan bangunan gedung", "建筑施工许可证 (IMBG)"],
+    ["formulir permohonan", "申请表"],
+    ["verifikasi lapangan", "现场核查"],
+    ["tim teknis", "技术组"],
+    ["rekomendasi teknis", "技术建议书"],
+    ["SKRK", "空间规划确认函"],
+    ["ITR", "技术考量函"],
+    ["DLHK", "环境与林业局"],
+    ["DPKP", "消防与救援局"],
+    ["surat keterangan rencana kota", "城市规划说明函"],
+    ["RTRW", "区域空间规划"],
+    ["RDTR", "详细空间规划"],
+    ["KLHS", "战略环境评估"],
+    ["SPPL", "环境管理声明书"],
+    ["delisting", "除名"],
+    ["suspensi", "暂停交易"],
+    ["emiten", "上市公司"],
+    ["sekuritas", "证券公司"],
+    ["reksa dana", "共同基金"],
+    ["dinas penanaman modal", "投资局"],
+    ["rekomendasi investasi", "投资推荐信"],
+    ["profil perusahaan", "公司简介"],
+    ["akta perusahaan", "公司章程"],
+    ["perubahan akta", "章程修订"],
+    ["SK Kemenkumham", "司法人权部决定书"],
+    ["NPWP perusahaan", "公司税号"],
+    ["PKP", "应税企业家"],
+    ["pengukuhan PKP", "PKP资格认定"],
+    ["faktur pajak elektronik", "电子税务发票"],
+    ["SPT masa PPN", "增值税月度申报"],
+    ["SPT masa PPh 21", "21条所得税月度申报"],
+    ["SPT masa PPh 23", "23条所得税月度申报"],
+    ["SPT masa PPh 25", "25条所得税月度申报"],
+    ["SPT tahunan badan", "企业年度申报"],
+    ["laporan keuangan audit", "经审计的财务报表"],
+    ["restitusi PPN", "增值税退税"],
+    ["pemeriksaan pajak", "税务检查"],
+    ["surat ketetapan pajak", "税务决定书"],
+    ["SKPKB", "少缴税款决定书"],
+    ["SKPLB", "多缴税款决定书"],
+    ["SKPN", "零税额决定书"],
+    ["keberatan pajak", "税务复议"],
+    ["banding pajak", "税务诉讼"],
+    ["pengadilan pajak", "税务法院"],
+    ["Bea Cukai", "海关"],
+    ["jalur hijau", "绿色通道"],
+    ["jalur merah", "红色通道"],
+    ["HS Code", "海关协调制度编码"],
+    ["PIBK", "货物进口通知单"],
+    ["PEB", "货物出口通知单"],
+    ["manifes", "舱单"],
+    ["delivery order", "提货单"],
+    ["bill of lading", "提单"],
+    ["airway bill", "空运提单"],
+    ["container", "集装箱"],
+    ["demurrage", "滞箱费"],
+    ["detensi", "滞港费"],
+    ["SPJM", "海运服务提供者证明"],
+    ["syahbandar", "港务长"],
+    ["OSS RBA", "风险等级营业许可系统"],
+    ["pertek", "技术考量函"],
+    ["IUJP", "建筑服务营业许可证"],
+    ["SBU", "企业资质证书"],
+    ["LPJK", "建筑服务发展局"],
+    ["K3 Umum", "一般职业安全健康"],
+    ["ahli K3", "职业安全健康专家"],
+    ["P2K3", "职业安全健康委员会"],
+    ["dokter perusahaan", "企业医生"],
+    ["paramedis", "护理人员"],
+    ["dinas pemadam kebakaran", "消防局"],
+    ["pos pemadam kebakaran", "消防站"],
+    ["badan narkotika nasional", "国家禁毒局 (BNN)"],
+    ["rehabilitasi", "康复"],
+    ["tes urine", "尿检"],
+    ["pengaduan masyarakat", "公众投诉"],
+    ["call center", "呼叫中心"],
+    ["layanan darurat", "紧急服务"],
+    ["evakuasi medis", "医疗后送"],
+    ["posko bencana", "灾害指挥所"],
+    ["peringatan dini", "早期预警"],
+    ["logistik bencana", "救灾物资"],
+    ["tenda darurat", "应急帐篷"],
+    ["dapur umum", "赈灾食堂"],
+    ["sukarelawan", "志愿者"],
+    ["tanggap darurat", "应急响应"],
+    ["penanggulangan bencana", "灾害应对"],
+    ["BNPB", "国家灾害管理局"],
+    ["BPBD", "地方灾害管理局"],
+    ["MDMC", "穆罕默迪亚灾害管理中心"],
+    ["TAGANA", "社会部灾害响应队"],
+    ["surat keterangan kehilangan", "遗失证明"],
+    ["laporan polisi", "报警记录"],
+    ["visum et repertum", "验伤报告"],
+    ["alat bukti", "证据"],
+    ["surat tilang", "罚单"],
+    ["putusan pengadilan", "法院判决"],
+    ["gugatan perdata", "民事诉讼"],
+    ["tuntutan pidana", "刑事指控"],
+    ["saksi ahli", "专家证人"],
+    ["sumpah", "宣誓"],
+    ["kuasa hukum", "律师"],
+    ["surat dakwaan", "起诉书"],
+    ["pembelaan", "辩护"],
+    ["banding", "上诉"],
+    ["kasasi", "最高上诉"],
+    ["peninjauan kembali", "再审"],
+    ["inkrah", "具有法律效力"],
+    ["eksekusi", "执行"],
+    ["sita", "查封"],
+    ["lelang", "拍卖"],
+    ["akta jual beli", "买卖契约"],
+    ["PPAT", "土地证契约官"],
+    ["notaris", "公证人"],
+    ["legalisasi", "认证"],
+    ["apostille", "海牙认证"],
+    ["cap jari", "指印"],
+    ["materai tempel", "印花税票"],
+    ["pelaporan SPT tahunan", "年度纳税申报"],
+    ["pajak kendaraan bermotor", "机动车税"]
+    ];
+    govRaw.forEach(([indo, chn]) => categories.gov.words.push({ indo, chinese: chn }));
+
+    // 冶矿工厂类
+    const factoryRaw = [
+       
+    ["bijih besi", "铁矿石"],
+    ["kokas", "焦炭"],
+    ["baja", "钢"],
+    ["emas", "黄金"],
+    ["batubara kokas", "焦煤"],
+    ["antrasit", "无烟煤"],
+    ["lignit", "褐煤"],
+    ["kalori", "热值"],
+    ["abu", "灰分"],
+    ["sulfur", "硫"],
+    ["presipitator elektrostatik", "静电除尘器"],
+    ["cerobong asap", "烟囱"],
+    ["batu kapur", "石灰石"],
+    ["flotasi", "浮选"],
+    ["konsentrat", "精矿"],
+    ["tailing", "尾矿"],
+    ["pengapungan", "浮选"],
+    ["reagen", "药剂/试剂"],
+    ["geologi", "地质"],
+    ["eksplorasi", "勘探"],
+    ["pengeboran inti", "岩心钻探"],
+    ["sampel", "样本"],
+    ["kadar air", "含水率"],
+    ["ventilasi", "通风"],
+    ["slurry", "矿浆"],
+    ["pengental", "浓缩机"],
+    ["filtrasi", "过滤"],
+    ["pengering", "干燥机"],
+    ["penggilingan", "研磨"],
+    ["sirkuit tertutup", "闭路循环"],
+    ["hidrosiklon", "水力旋流器"],
+    ["sel flotasi", "浮选槽"],
+    ["kolektor", "捕收剂"],
+    ["frother", "起泡剂"],
+    ["depressant", "抑制剂"],
+    ["magnetic separator", "磁选机"],
+    ["gravitasi", "重力/重选"],
+    ["shaking table", "摇床"],
+    ["smelter tembaga", "铜冶炼厂"],
+    ["katoda tembaga", "铜阴极"],
+    ["anoda", "阳极"],
+    ["elektrolisis", "电解"],
+    ["sel elektrolisis", "电解槽"],
+    ["asam sulfat", "硫酸"],
+    ["tangki", "储罐"],
+    ["pipa", "管道"],
+    ["katup", "阀门"],
+    ["pompa", "泵"],
+    ["kompresor", "空压机"],
+    ["generator", "发电机"],
+    ["boiler", "锅炉"],
+    ["menara pendingin", "冷却塔"],
+    ["crusher rahang", "颚式破碎机"],
+    ["saringan getar", "振动筛"],
+    ["jig", "跳汰机"],
+    ["spiral konsentrator", "螺旋选矿机"],
+    ["amalgamasi", "混汞法"],
+    ["sianidasi", "氰化法"],
+    ["karbon aktif", "活性炭"],
+    ["desorpsi", "解吸"],
+    ["electrowinning", "电积"],
+    ["tungku induksi", "感应炉"],
+    ["pengecoran", "铸造/浇铸"],
+    ["bengkel", "车间/维修间"],
+    ["pasir silika", "硅砂"],
+    ["kuarsa", "石英"],
+    ["kaolin", "高岭土"],
+    ["alumina", "氧化铝"],
+    ["reduktor", "还原剂"],
+    ["fluks", "熔剂"],
+    ["terak", "炉渣"],
+    ["peleburan ulang", "重熔"],
+    ["pengepresan", "压制"],
+    ["sintering", "烧结"],
+    ["hot rolled", "热轧"],
+    ["cold rolled", "冷轧"],
+    ["galvanis", "镀锌"],
+    ["kromium", "铬"],
+    ["mangan", "锰"],
+    ["molibdenum", "钼"],
+    ["grafit", "石墨"],
+    ["kerak", "渣壳/氧化皮"],
+    ["pengotor", "杂质"],
+    ["bijih mentah", "原矿"],
+    ["kalsinasi", "煅烧"],
+    ["rotary dryer", "旋转干燥机"],
+    ["cyclone", "旋风分离器"],
+    ["scrubber", "洗涤塔"],
+    ["cerobong", "烟囱"],
+    ["pengendap debu", "除尘器"],
+    ["material handling", "物料输送"],
+    ["hopper", "料斗"],
+    ["feeder", "给料机"],
+    ["apron feeder", "板式给料机"],
+    ["stacker", "堆料机"],
+    ["reclaimer", "取料机"],
+    ["stockpile", "堆场"],
+    ["belt scale", "皮带秤"],
+    ["sampler", "取样器"],
+    ["laboratorium", "实验室"],
+    ["spektrometer", "光谱仪"],
+    ["XRF", "X射线荧光分析仪"],
+    ["XRD", "X射线衍射仪"],
+    ["fine ore", "粉矿"],
+    ["jaw crusher", "颚式破碎机"],
+    ["cone crusher", "圆锥破碎机"],
+    ["roller crusher", "对辊破碎机"],
+    ["hammer mill", "锤式磨机"],
+    ["rod mill", "棒磨机"],
+    ["sag mill", "半自磨机"],
+    ["liner", "衬板"],
+    ["media gerus", "研磨介质"],
+    ["classifier", "分级机"],
+    ["thickener", "浓缩机"],
+    ["clarifier", "澄清器"],
+    ["flokulan", "絮凝剂"],
+    ["koagulan", "混凝剂"],
+    ["sedimen", "沉淀物"],
+    ["reagen kimia", "化学药剂"],
+    ["sianida", "氰化物"],
+    ["detoxification", "解毒"],
+    ["slag", "炉渣"],
+    ["matte", "冰铜"],
+    ["granulated slag", "粒化渣"]
+    ];
+    factoryRaw.forEach(([indo, chn]) => categories.factory.words.push({ indo, chinese: chn }));
+
+    // 给每个单词分配唯一ID
+    let globalWordId = 0;
+    const allWordsMap = new Map(); // id => {id, indo, chinese, cat}
+    const catWordsMap = new Map(); // cat => array of word objects
+
+    for (let [catKey, catObj] of Object.entries(categories)) {
+        let list = [];
+        for (let w of catObj.words) {
+            let id = globalWordId++;
+            let fullWord = { id, indo: w.indo, chinese: w.chinese, category: catKey };
+            allWordsMap.set(id, fullWord);
+            list.push(fullWord);
+        }
+        catWordsMap.set(catKey, list);
+    }
+
+    // 存储: 每个分类下未学习的单词ID数组, 复习队列(全局跨类复习队列)
+    let unlearnedByCat = new Map(); // catKey -> Set of word ids
+    let reviewQueue = []; // { wordId, nextReviewDate }
+
+    // 初始化本地数据
+    function loadData() {
+        for (let cat of Object.keys(categories)) {
+            let stored = localStorage.getItem(`unlearned_${cat}`);
+            if (stored) {
+                let arr = JSON.parse(stored);
+                unlearnedByCat.set(cat, new Set(arr));
+            } else {
+                let allIds = catWordsMap.get(cat).map(w => w.id);
+                unlearnedByCat.set(cat, new Set(allIds));
+            }
+        }
+        let storedReview = localStorage.getItem("reviewQueueAll");
+        if (storedReview) {
+            reviewQueue = JSON.parse(storedReview);
+            reviewQueue = reviewQueue.filter(item => allWordsMap.has(item.wordId));
+        } else {
+            reviewQueue = [];
+        }
+        updateStatsUI();
+    }
+
+    function persistUnlearned(cat) {
+        let arr = Array.from(unlearnedByCat.get(cat));
+        localStorage.setItem(`unlearned_${cat}`, JSON.stringify(arr));
+    }
+
+    function persistReview() {
+        localStorage.setItem("reviewQueueAll", JSON.stringify(reviewQueue));
+    }
+
+    // 新词学习后加入隔天复习
+    function addToReviewTomorrow(wordId) {
+        let tomorrow = Date.now() + 86400000;
+        let idx = reviewQueue.findIndex(item => item.wordId === wordId);
+        if (idx === -1) reviewQueue.push({ wordId, nextReviewDate: tomorrow });
+        else reviewQueue[idx].nextReviewDate = tomorrow;
+        persistReview();
+        updateStatsUI();
+    }
+
+    function markLearned(wordId, cat) {
+        let set = unlearnedByCat.get(cat);
+        if (set.has(wordId)) {
+            set.delete(wordId);
+            persistUnlearned(cat);
+        }
+        updateStatsUI();
+    }
+
+    function getDueReviews() {
+        let now = Date.now();
+        return reviewQueue.filter(item => item.nextReviewDate <= now).map(item => item.wordId);
+    }
+
+    function removeFromReview(wordId) {
+        let idx = reviewQueue.findIndex(i => i.wordId === wordId);
+        if (idx !== -1) reviewQueue.splice(idx, 1);
+        persistReview();
+        updateStatsUI();
+    }
+
+    function resetReviewDate(wordId) {
+        let idx = reviewQueue.findIndex(i => i.wordId === wordId);
+        if (idx !== -1) reviewQueue[idx].nextReviewDate = Date.now();
+        else reviewQueue.push({ wordId, nextReviewDate: Date.now() });
+        persistReview();
+        updateStatsUI();
+    }
+
+    function updateStatsUI() {
+        let activeCat = currentCategory;
+        let catWords = catWordsMap.get(activeCat) || [];
+        let total = catWords.length;
+        let remaining = unlearnedByCat.get(activeCat)?.size || 0;
+        document.getElementById("catTotal").innerText = total;
+        document.getElementById("newRemaining").innerText = remaining;
+        let due = getDueReviews().length;
+        document.getElementById("reviewDueCount").innerText = due;
+        document.getElementById("reviewPoolCount").innerText = reviewQueue.length;
+    }
+
+    // ---------- 当前活动分类与模式 ----------
+    let currentCategory = "daily";
+    let currentMode = "new";   // "new" or "review"
+    let currentNewWordId = null;
+    let waitingNext = false;
+    let currentReviewWordId = null;
+    let reviewTimer = null;
+    let reviewSecondsLeft = 5;
+    let reviewChineseShown = false;
+    let reviewAllowAction = true;
+
+    // 从当前分类随机获取未学单词
+    function getRandomUnlearnedByCat(cat) {
+        let set = unlearnedByCat.get(cat);
+        if (!set || set.size === 0) return null;
+        let ids = Array.from(set);
+        let randomIdx = Math.floor(Math.random() * ids.length);
+        return ids[randomIdx];
+    }
+
+    // 生成四个选项 (正确 + 随机三个不同中文)
+    function generateOptions(correctWord) {
+        let allWordsInCat = catWordsMap.get(currentCategory) || [];
+        let otherChinese = allWordsInCat.filter(w => w.id !== correctWord.id).map(w => w.chinese);
+        let uniqueOthers = [...new Set(otherChinese)];
+        let shuffled = [...uniqueOthers];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        let wrong = shuffled.slice(0, 3);
+        while (wrong.length < 3) wrong.push("默认选项");
+        let options = [...wrong, correctWord.chinese];
+        for (let i = options.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [options[i], options[j]] = [options[j], options[i]];
+        }
+        return options.map(opt => ({ text: opt, isCorrect: opt === correctWord.chinese }));
+    }
+
+    async function renderNewWord() {
+        if (waitingNext) return;
+        let wordId = getRandomUnlearnedByCat(currentCategory);
+        if (!wordId) {
+            document.getElementById("newIndoWord").innerText = "🎉 本类单词已学完！";
+            document.getElementById("optionsContainer").innerHTML = `<div style="grid-column:span2; text-align:center">切换分类继续学习</div>`;
+            currentNewWordId = null;
+            return;
+        }
+        currentNewWordId = wordId;
+        let wordObj = allWordsMap.get(wordId);
+        document.getElementById("newIndoWord").innerText = wordObj.indo;
+        let opts = generateOptions(wordObj);
+        let container = document.getElementById("optionsContainer");
+        container.innerHTML = "";
+        opts.forEach(opt => {
+            let btn = document.createElement("button");
+            btn.className = "option-btn";
+            btn.innerText = opt.text;
+            btn.onclick = () => handleNewAnswer(opt.isCorrect, wordObj);
+            container.appendChild(btn);
+        });
+        document.getElementById("newFeedbackMsg").innerHTML = "🤔 请选择正确释义";
+    }
+
+    function handleNewAnswer(isCorrect, wordObj) {
+        if (waitingNext) return;
+        waitingNext = true;
+        let feed = document.getElementById("newFeedbackMsg");
+        if (isCorrect) {
+            feed.innerHTML = "✅ 正确！已加入明天复习队列";
+            markLearned(wordObj.id, wordObj.category);
+            addToReviewTomorrow(wordObj.id);
+        } else {
+            feed.innerHTML = `❌ 错误！正确: ${wordObj.chinese}。该词已加入复习队列`;
+            markLearned(wordObj.id, wordObj.category);
+            addToReviewTomorrow(wordObj.id);
+        }
+        let btns = document.querySelectorAll("#optionsContainer .option-btn");
+        btns.forEach(btn => btn.disabled = true);
+        setTimeout(() => {
+            waitingNext = false;
+            renderNewWord();
+        }, 1000);
+    }
+
+    // 复习模块逻辑
+    function stopReviewTimer() { if (reviewTimer) { clearInterval(reviewTimer); reviewTimer = null; } }
+    function startReviewTimer() {
+        reviewSecondsLeft = 5;
+        let progress = document.getElementById("timerProgress");
+        let chDiv = document.getElementById("reviewChineseDisplay");
+        if (progress) progress.style.width = "100%";
+        reviewTimer = setInterval(() => {
+            if (!reviewAllowAction) return;
+            reviewSecondsLeft -= 0.1;
+            if (progress) {
+                let pct = Math.max(0, (reviewSecondsLeft / 5) * 100);
+                progress.style.width = `${pct}%`;
+            }
+            if (reviewSecondsLeft <= 0 && !reviewChineseShown && currentReviewWordId) {
+                let w = allWordsMap.get(currentReviewWordId);
+                if (w) {
+                    chDiv.innerHTML = `📖 ${w.chinese}`;
+                    chDiv.style.background = "#d9f0ff";
+                    reviewChineseShown = true;
+                }
+                stopReviewTimer();
+                if (progress) progress.style.width = "0%";
+            }
+        }, 100);
+    }
+
+    function loadNextReview() {
+        stopReviewTimer();
+        reviewAllowAction = true;
+        reviewChineseShown = false;
+        let dueIds = getDueReviews();
+        if (dueIds.length === 0) {
+            document.getElementById("reviewIndoWord").innerText = "🎉 无待复习单词";
+            document.getElementById("reviewChineseDisplay").innerHTML = "完成啦，明天再来";
+            document.getElementById("rememberBtn").disabled = true;
+            document.getElementById("forgetBtn").disabled = true;
+            currentReviewWordId = null;
+            return;
+        }
+        currentReviewWordId = dueIds[0];
+        let word = allWordsMap.get(currentReviewWordId);
+        document.getElementById("reviewIndoWord").innerText = word.indo;
+        document.getElementById("reviewChineseDisplay").innerHTML = "⏳ 5秒后显示中文";
+        document.getElementById("reviewChineseDisplay").style.background = "#f1f5f9";
+        document.getElementById("rememberBtn").disabled = false;
+        document.getElementById("forgetBtn").disabled = false;
+        reviewChineseShown = false;
+        if (document.getElementById("timerProgress")) document.getElementById("timerProgress").style.width = "100%";
+        startReviewTimer();
+    }
+
+    function handleRemember() {
+        if (!reviewAllowAction || !currentReviewWordId) return;
+        reviewAllowAction = false;
+        stopReviewTimer();
+        removeFromReview(currentReviewWordId);
+        loadNextReview();
+    }
+    function handleForget() {
+        if (!reviewAllowAction || !currentReviewWordId) return;
+        reviewAllowAction = false;
+        stopReviewTimer();
+        resetReviewDate(currentReviewWordId);
+        loadNextReview();
+    }
+
+    // 切换分类时刷新新词界面
+    function switchCategory(cat) {
+        currentCategory = cat;
+        document.querySelectorAll(".cat-btn").forEach(btn => {
+            if (btn.dataset.cat === cat) btn.classList.add("active");
+            else btn.classList.remove("active");
+        });
+        updateStatsUI();
+        if (currentMode === "new") {
+            waitingNext = false;
+            renderNewWord();
+        } else {
+            // 复习模式不依赖分类，但保持界面
+        }
+    }
+
+    function switchMode(mode) {
+        currentMode = mode;
+        document.querySelectorAll(".mode-btn").forEach(btn => {
+            if (btn.dataset.mode === mode) btn.classList.add("active");
+            else btn.classList.remove("active");
+        });
+        document.getElementById("newPanel").classList.toggle("active-panel", mode === "new");
+        document.getElementById("reviewPanel").classList.toggle("active-panel", mode === "review");
+        if (mode === "new") renderNewWord();
+        else loadNextReview();
+    }
+
+    // 初始化UI与事件
+    function init() {
+        loadData();
+        document.getElementById("rememberBtn").addEventListener("click", handleRemember);
+        document.getElementById("forgetBtn").addEventListener("click", handleForget);
+        document.querySelectorAll(".cat-btn").forEach(btn => {
+            btn.addEventListener("click", () => switchCategory(btn.dataset.cat));
+        });
+        document.querySelectorAll(".mode-btn").forEach(btn => {
+            btn.addEventListener("click", () => switchMode(btn.dataset.mode));
+        });
+        renderNewWord();
+        updateStatsUI();
+    }
+
+    init();
+</script>
+</body>
+</html>
